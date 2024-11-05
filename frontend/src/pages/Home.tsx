@@ -1,13 +1,15 @@
-import { GoPlusCircle } from "react-icons/go";
-import Button from "../components/ui/Button";
-import Title from "../components/ui/Title";
+import Header from "../components/shared/Header";
+import PostList from "../components/shared/PostList";
 
 type Props = {};
 
 const Home = () => {
   return (
     <div>
-      <h1 className="text-center text-3xl font-bold py-2">CookBook</h1>
+      <Header />
+      <div className="container mx-auto px-4">
+        <PostList />
+      </div>
     </div>
   );
 };
