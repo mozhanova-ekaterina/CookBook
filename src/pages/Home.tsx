@@ -1,14 +1,13 @@
-import Header from "../components/shared/Header";
-import PostList from "../components/shared/PostList";
+
 
 type Props = {};
 
 const Home = () => {
   return (
     <div>
-      <Header />
+      {/* <Header /> */}
       <div className="container">
-        <PostList />
+        {/* <PostList /> */}
       </div>
     </div>
   );
