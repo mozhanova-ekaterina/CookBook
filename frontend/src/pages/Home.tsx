@@ -7,7 +7,7 @@ const Home = () => {
   return (
     <div>
       <Header />
-      <div className="container mx-auto px-4">
+      <div className="container">
         <PostList />
       </div>
     </div>

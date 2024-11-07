@@ -1,10 +1,14 @@
-import React from "react";
 import Post from "./Post";
 
 type Props = {};
 
 const PostList = (props: Props) => {
-  return <Post />;
+  return (
+    <div className="grid gap-3">
+      <Post />
+      <Post />
+    </div>
+  );
 };
 
 export default PostList;
