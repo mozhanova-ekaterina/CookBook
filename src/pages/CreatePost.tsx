@@ -12,7 +12,7 @@ import {
 } from "../lib/appwrite";
 import { useUserStore } from "../store/user.store";
 import Loader from "../components/ui/Loader";
-import Button from "../components/ui/button";
+import Button from "../components/ui/Button";
 
 const CreatePost = () => {
   const [postImg, setPostImg] = useState("");
@@ -34,7 +34,7 @@ const CreatePost = () => {
       .catch((error) => console.warn(error));
   };
   const createPost = async () => {
-    const res = await DB.createDocument(
+    await DB.createDocument(
       DB_ID,
       COLLECTION_POSTS_ID,
       ID.unique(),
