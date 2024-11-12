@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { AiOutlineLogin } from "react-icons/ai";
 import { RiLogoutCircleRLine } from "react-icons/ri";
 import { Link, useNavigate } from "react-router-dom";
 import { account } from "../../lib/appwrite";

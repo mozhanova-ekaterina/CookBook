@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { COLLECTION_POSTS_ID, DB, DB_ID } from "../../lib/appwrite";
 import Post from "./Post";
 import { TPost } from "../../types";
-import Button from "../ui/button";
+import Button from "../ui/Button";
 import { HiPlus } from "react-icons/hi";
 import { useNavigate } from "react-router-dom";
 import { TbMoodEmpty } from "react-icons/tb";

@@ -1,8 +1,8 @@
 import React from "react";
 import { useUserStore } from "../../store/user.store";
-import Button from "../ui/button";
 import { RiDeleteBin7Line } from "react-icons/ri";
 import { COLLECTION_POSTS_ID, DB, DB_ID } from "../../lib/appwrite";
+import Button from "../ui/Button";
 
 type Props = {
   title: string;
