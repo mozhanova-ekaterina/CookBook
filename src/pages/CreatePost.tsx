@@ -34,7 +34,7 @@ const CreatePost = () => {
       .catch((error) => console.warn(error));
   };
   const createPost = async () => {
-    const res = await DB.createDocument(
+    await DB.createDocument(
       DB_ID,
       COLLECTION_POSTS_ID,
       ID.unique(),
