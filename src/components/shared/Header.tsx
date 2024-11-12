@@ -1,13 +1,15 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { AiOutlineLogin } from "react-icons/ai";
 import { RiLogoutCircleRLine } from "react-icons/ri";
 import { Link, useNavigate } from "react-router-dom";
 import { account } from "../../lib/appwrite";
 import { useUserStore } from "../../store/user.store";
+import clsx from "clsx";
 
 const Header = () => {
   const { user, clearUser, setUser } = useUserStore();
   const navigate = useNavigate();
+  const [scrollY, setScrollY] = useState(0);
 
   const getMe = async () => {
     try {
@@ -16,7 +18,7 @@ const Header = () => {
         setUser({
           name: res.name,
           email: res.email,
-        }); 
+        });
     } catch (error) {
       console.warn(error);
     }
@@ -35,12 +37,21 @@ const Header = () => {
     getMe();
   }, []);
 
+  window.onscroll = () => {
+    setScrollY(window.scrollY);
+  };
+
   return (
-    <div className="border-t-4 border-t-primary sticky top-0 left-0 right-0">
+    <div
+      className={clsx(
+        "border-t-4 border-t-primary sticky z-50 top-0 left-0 right-0 pb-2 mb-2",
+        {"border-b border-b-primary bg-base-100": scrollY}
+      )}
+    >
       <div className="container relative">
         <Link to="/">
-          <h1 className="text-2xl text-center p-1 mb-4 font-bold ">
-            C<span className="text-primary">oo</span>k B
+          <h1 className="text-2xl text-center p-1 font-bold ">
+            C<span className="text-primary">oo</span>kB
             <span className="text-primary">oo</span>k
           </h1>
         </Link>

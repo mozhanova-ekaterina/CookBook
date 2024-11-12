@@ -6,6 +6,7 @@ type Props = {
   icon?: React.ReactNode;
   variant?: "primary" | "secondary";
   className?: string;
+  size?: number;
   onClick?: () => void;
 };
 
@@ -15,9 +16,16 @@ const Button: React.FC<Props> = ({
   variant,
   className,
   onClick,
+  size = 2,
 }) => {
   return (
-    <button onClick={onClick} className={clsx(`btn btn-${variant}`, className)}>
+    <button
+      onClick={onClick}
+      className={clsx(
+        `btn btn-${variant} h-[${size}rem]  min-h-[${size}rem] p-${size}`,
+        className
+      )}
+    >
       {icon}
       {text}
     </button>

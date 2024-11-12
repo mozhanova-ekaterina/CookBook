@@ -9,4 +9,5 @@ export type TPost = {
   userEmail: string;
   imageUrl: string;
   tags: string[];
+  $id: string;
 }

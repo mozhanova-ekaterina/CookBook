@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import React, { useState } from "react";
 
 type Props = {
@@ -33,7 +34,9 @@ const Input: React.FC<Props> = ({
         type={type}
         value={value}
         placeholder={placeholder}
-        className=" gap-1 border-b-primary border-b pl-7 py-2 outline-none"
+        className={clsx("gap-1 border-b-primary border-b py-2 outline-none", {
+          "pl-7": icon,
+        })}
       />
       {(validation?.error || error) && dirty && (
         <div className="text-warning mt-2 border p-1 rounded-md border-warning">

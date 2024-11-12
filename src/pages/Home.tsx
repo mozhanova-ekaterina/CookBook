@@ -8,8 +8,7 @@ const Home = () => {
   return (
     <div className="page ">
       <Header />
-      <div className="container">
-        Привет {user?.name}
+      <div className="container grow flex flex-col">
         <PostList />
       </div>
     </div>
