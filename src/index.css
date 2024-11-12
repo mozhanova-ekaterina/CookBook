@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root{
+  font-size: 20px;
+}
+.container{
+  @apply mx-auto px-2
+}
+.page{
+  @apply min-h-screen flex flex-col
+}

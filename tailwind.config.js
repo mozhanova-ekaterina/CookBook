@@ -13,10 +13,14 @@ export default {
         light: {
           primary: "#ff006e",
           "primary-content": "#ffffff",
-          secondary: "#14b8a6",
-          accent: "#37cdbe",
-          neutral: "#3d4451",
-          "base-100": "#ffffff",
+          secondary: "green",
+          accent: "green",
+          neutral: "#e5e5e5",
+          "base-100": "#ffffff", //main bg
+          warning: "#fb5607",
+          error: "#e63946",
+          info: "#00b4d8",
+          success: "#06d6a0",
         },
       },
     ],

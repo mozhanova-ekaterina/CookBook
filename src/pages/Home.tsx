@@ -1,13 +1,11 @@
 import Header from "../components/shared/Header";
 import PostList from "../components/shared/PostList";
 
-type Props = {};
-
-const Home = () => {
+const Home = () => {  
   return (
-    <div>
+    <div className="page ">
       <Header />
-      <div className="container mx-auto px-4">
+      <div className="container grow flex flex-col">
         <PostList />
       </div>
     </div>
