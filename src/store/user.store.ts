@@ -1,9 +1,13 @@
 import { create } from "zustand";
-import { TUser } from "../types";
+
+interface User {
+  name: string
+  email: string
+}
 
 interface UserState {
-  user: TUser | null
-  setUser: (user: TUser) => void
+  user: User | null
+  setUser: (user: User) => void
   clearUser: () => void
 }
 

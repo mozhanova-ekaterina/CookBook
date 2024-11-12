@@ -16,7 +16,7 @@ const Header = () => {
         setUser({
           name: res.name,
           email: res.email,
-        });
+        }); 
     } catch (error) {
       console.warn(error);
     }

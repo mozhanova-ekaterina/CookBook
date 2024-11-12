@@ -3,10 +3,10 @@ import React, { useState } from "react";
 type Props = {
   value: string;
   icon?: JSX.Element;
-  placeholder: string;
+  placeholder?: string;
   type?: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  validate: (value: string) => { error: string } | undefined;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  validate?: (value: string) => { error: string };
   error?: string;
 };
 
@@ -16,7 +16,7 @@ const Input: React.FC<Props> = ({
   placeholder,
   type,
   onChange,
-  validate,
+  validate = () => ({ error: "" }),
   error,
 }) => {
   const [dirty, setDirty] = useState(false);
