@@ -6,7 +6,7 @@ import { account } from "../../lib/appwrite";
 import { useUserStore } from "../../store/user.store";
 
 const Header = () => {
-  const { user, setUser } = useUserStore();
+  const { user, clearUser, setUser } = useUserStore();
   const navigate = useNavigate();
 
   const getMe = async () => {
@@ -24,11 +24,7 @@ const Header = () => {
   const logout = async () => {
     try {
       const res = await account.deleteSession("current");
-      res &&
-        setUser({
-          name: "",
-          email: "",
-        });
+      res && clearUser();
       navigate("/login");
     } catch (error) {
       console.warn(error);
@@ -36,7 +32,7 @@ const Header = () => {
   };
 
   useEffect(() => {
-    user && getMe();
+    getMe();
   }, []);
 
   return (
@@ -49,13 +45,7 @@ const Header = () => {
           </h1>
         </Link>
         <div className="absolute top-2 right-3">
-          {user ? (
-            <RiLogoutCircleRLine onClick={logout} size={"30px"} />
-          ) : (
-            <Link to="/login">
-              <AiOutlineLogin size={"30px"} />
-            </Link>
-          )}
+          {user && <RiLogoutCircleRLine onClick={logout} size={"30px"} />}
         </div>
       </div>
     </div>
