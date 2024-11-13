@@ -33,7 +33,7 @@ const Header = () => {
   };
 
   useEffect(() => {
-    getMe();
+    user ? getMe() : navigate("/login");
   }, []);
 
   window.onscroll = () => {
