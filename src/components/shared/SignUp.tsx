@@ -9,54 +9,60 @@ import {
   validatePassword,
 } from "../../utils/validation";
 import { useToasterStore } from "../../store/toaster.store";
+import { TNewUser } from "../../types";
 
 type Props = {
-  onSubmit: (email: string, password: string, name: string) => void;
+  onSubmit: (user: TNewUser) => void;
 };
 
 const SignUp: React.FC<Props> = ({ onSubmit }) => {
   const {setToast: setToast} = useToasterStore();
-  const [name, setName] = useState<string>("");
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
+  // const [name, setName] = useState<string>("");
+  // const [email, setEmail] = useState<string>("");
+  // const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
+  const [user, setUser] = useState<TNewUser>({
+    name: "",
+    email: "",
+    password: "",
+  });
 
   const validateForm = () => {
-    if (password !== confirmPassword) {
+    if (user.password !== confirmPassword) {
       setToast("Пароли не совпадают", "error");
       
       return;
     }
-    if (!name || !email || !password || !confirmPassword) {
+    if (!user.name || !user.email || !user.password || !confirmPassword) {
       setToast("Поля не могут быть пустыми", "error");
       return;
     }
-    onSubmit(email, password, name);
+    onSubmit(user);
   };
   return (
     <div className="grid gap-3 mt-4">
       <Input
-        value={name}
+        value={user.name}
         icon={<RiUserSmileLine size={"25px"} />}
         placeholder="Имя пользователя"
-        onChange={(e) => setName(e.target.value)}
+        onChange={(e) => setUser({ ...user, name: e.target.value })}
         validate={validateName}
       />
 
       <Input
-        value={email}
+        value={user.email}
         icon={<MdOutlineEmail size={"25px"} />}
         placeholder="Email"
-        onChange={(e) => setEmail(e.target.value)}
+        onChange={(e) => setUser({ ...user, email: e.target.value })}
         validate={validateEmail}
       />
 
       <Input
-        value={password}
+        value={user.password}
         type="password"
         icon={<PiPassword size={"25px"} />}
         placeholder="Пароль"
-        onChange={(e) => setPassword(e.target.value)}
+        onChange={(e) => setUser({ ...user, password: e.target.value })}
         validate={validatePassword}
       />
       <Input

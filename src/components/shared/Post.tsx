@@ -1,31 +1,27 @@
 import React from "react";
 import { useUserStore } from "../../store/user.store";
 import { RiDeleteBin7Line } from "react-icons/ri";
-import { COLLECTION_POSTS_ID, DB, DB_ID } from "../../lib/appwrite";
 import Button from "../ui/Button";
+import { TUser } from "../../types";
 
 type Props = {
   title: string;
   imageUrl: string;
-  authorEmail: string;
   $id: string;
-  onClick?: () => void;
+  creator: TUser;
+  onClick: () => void;
+  onDel: (id: string) => void;
 };
 
 const Post: React.FC<Props> = ({
   title,
   imageUrl,
   onClick,
-  authorEmail,
+  onDel,
+  creator,
   $id,
 }) => {
   const { user } = useUserStore();
-  const deletePost = async () => {
-    if (window.confirm("Удалить рецепт?")) {
-      await DB.deleteDocument(DB_ID, COLLECTION_POSTS_ID, $id);
-      
-    }
-  };
   return (
     <div className="card bg-base-100 shadow-xl">
       <figure onClick={onClick} className="max-h-[200px]">
@@ -34,13 +30,13 @@ const Post: React.FC<Props> = ({
       <div className="card-body py-3 px-2">
         <h2 className="card-title">{title}</h2>
       </div>
-      {authorEmail === user?.email && (
+      {creator.accountId === user?.accountId && (
         <div className="absolute bottom-0 right-0 p-2">
           <Button
             className="rounded-full"
             size={2}
             icon={<RiDeleteBin7Line size={"15px"} />}
-            onClick={deletePost}
+            onClick={() => onDel($id)}
           />
         </div>
       )}

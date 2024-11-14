@@ -1,37 +1,31 @@
 import Header from "../components/shared/Header";
 import { useState } from "react";
-import { account, ID } from "../lib/appwrite";
+import { account } from "../lib/appwrite/config";
 import { useNavigate } from "react-router-dom";
 import clsx from "clsx";
 import SignIn from "../components/shared/SignIn";
 import SignUp from "../components/shared/SignUp";
 import { useUserStore } from "../store/user.store";
+import { TNewUser, TUser } from "../types";
+import { appwriteCreateAccount, appwriteGetMe } from "../lib/appwrite/api";
 
 const SignInUp = () => {
   const [tabs, setTabs] = useState<number>(1);
   const { setUser } = useUserStore();
   const navigate = useNavigate();
 
-  const register = async (email: string, password: string, name: string) => {
-    try {
-      await account.create(ID.unique(), email, password, name);
-      await login(email, password);
-    } catch (error) {
-      window.alert(error);
-    }
+  const register = async (user: TNewUser) => {
+    const newUser = (await appwriteCreateAccount(user)) as TUser;
+    if (!newUser) return;
+    setUser(newUser);
+    login(user.email, user.password);
   };
   const login = async (email: string, password: string) => {
-    try {
-      await account.createEmailPasswordSession(email, password);
-      const res = await account.get();
-      setUser({
-        name: res.name,
-        email: res.email,
-      });
-      navigate("/");
-    } catch (error) {
-      console.warn(error);
-    }
+    const session = await account.createEmailPasswordSession(email, password);
+    if (!session) return;
+    const user = (await appwriteGetMe()) as TUser;
+    setUser(user);
+    navigate("/");
   };
 
   return (

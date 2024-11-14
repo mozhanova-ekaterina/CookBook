@@ -1,26 +1,29 @@
 import { useEffect, useState } from "react";
-import { COLLECTION_POSTS_ID, DB, DB_ID } from "../../lib/appwrite";
+import { appwriteConfig, DB } from "../../lib/appwrite/config";
 import Post from "./Post";
 import { TPost } from "../../types";
 import Button from "../ui/Button";
 import { HiPlus } from "react-icons/hi";
 import { useNavigate } from "react-router-dom";
 import { TbMoodEmpty } from "react-icons/tb";
+import { appwriteDeleteDocument, appwriteGetCollection } from "../../lib/appwrite/api";
 
 const PostList = () => {
   const [posts, setPosts] = useState<TPost[]>([]);
   const navigate = useNavigate();
-  const getCollection = async () => {
-    try {
-      const data = await DB.listDocuments(DB_ID, COLLECTION_POSTS_ID);
-      setPosts(data.documents as unknown as TPost[]);
-    } catch (error) {
-      console.warn(error);
-    }
+
+  const getPosts = async () => {
+    const posts = await appwriteGetCollection(appwriteConfig.collectionPostsId) as TPost[];
+    setPosts(posts);
   };
 
+  const deletePost = async (postId: string) => {
+    const res = await appwriteDeleteDocument(postId, appwriteConfig.collectionPostsId);
+    setPosts(posts.filter((post) => post.$id !== postId));
+  }
+
   useEffect(() => {
-    getCollection();
+    getPosts();
   }, []);
 
   return (
@@ -32,9 +35,10 @@ const PostList = () => {
               key={i}
               title={post.title}
               imageUrl={post.imageUrl}
-              authorEmail={post.userEmail}
+              creator={post.creator}
               $id={post.$id}
               onClick={() => navigate(`/full-post/${post.$id}`)}
+              onDel={deletePost}
             />
           ))}
         </div>

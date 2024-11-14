@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { RiLogoutCircleRLine } from "react-icons/ri";
 import { Link, useNavigate } from "react-router-dom";
-import { account } from "../../lib/appwrite";
 import { useUserStore } from "../../store/user.store";
 import clsx from "clsx";
+import { appwriteGetMe, appwriteLogout } from "../../lib/appwrite/api";
+import { TUser } from "../../types";
 
 const Header = () => {
   const { user, clearUser, setUser } = useUserStore();
@@ -11,29 +12,21 @@ const Header = () => {
   const [scrollY, setScrollY] = useState(0);
 
   const getMe = async () => {
-    try {
-      const res = await account.get();
-      res &&
-        setUser({
-          name: res.name,
-          email: res.email,
-        });
-    } catch (error) {
-      console.warn(error);
-    }
+    const user = await appwriteGetMe() as TUser
+    setUser(user);
+    return user
   };
   const logout = async () => {
-    try {
-      const res = await account.deleteSession("current");
-      res && clearUser();
+    await appwriteLogout().then(() => {
+      clearUser();
       navigate("/login");
-    } catch (error) {
-      console.warn(error);
-    }
+    })
   };
 
   useEffect(() => {
-    user ? getMe() : navigate("/login");
+    getMe().then((res) => {
+      !res && navigate("/login");
+    });
   }, []);
 
   window.onscroll = () => {
@@ -44,7 +37,7 @@ const Header = () => {
     <div
       className={clsx(
         "border-t-4 border-t-primary sticky z-50 top-0 left-0 right-0 pb-2 mb-2",
-        {"border-b border-b-primary bg-base-100": scrollY}
+        { "border-b border-b-primary bg-base-100": scrollY }
       )}
     >
       <div className="container relative">
