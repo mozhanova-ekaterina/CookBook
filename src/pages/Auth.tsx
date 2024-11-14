@@ -29,30 +29,27 @@ const SignInUp = () => {
   };
 
   return (
-    <div className="page">
-      <Header />
-      <div className="container">
-        <div className="tabs tabs-bordered">
-          <a
-            onClick={() => setTabs(1)}
-            className={clsx("tab", { "tab-active": tabs === 1 })}
-          >
-            Войти
-          </a>
-          <a
-            onClick={() => setTabs(2)}
-            className={clsx("tab", { "tab-active": tabs === 2 })}
-          >
-            Регистрация
-          </a>
-        </div>
-        {tabs === 1 ? (
-          <SignIn onSubmit={login} />
-        ) : (
-          <SignUp onSubmit={register} />
-        )}
+    <>
+      <div className="tabs tabs-bordered">
+        <a
+          onClick={() => setTabs(1)}
+          className={clsx("tab", { "tab-active": tabs === 1 })}
+        >
+          Войти
+        </a>
+        <a
+          onClick={() => setTabs(2)}
+          className={clsx("tab", { "tab-active": tabs === 2 })}
+        >
+          Регистрация
+        </a>
       </div>
-    </div>
+      {tabs === 1 ? (
+        <SignIn onSubmit={login} />
+      ) : (
+        <SignUp onSubmit={register} />
+      )}
+    </>
   );
 };
 
