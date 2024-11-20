@@ -7,6 +7,7 @@ export type TUser = {
 }
 
 export type TNewUser = {
+  $id: string;
   name: string;
   email: string;
   password: string;

@@ -6,21 +6,29 @@ import Button from "../ui/Button";
 import { HiPlus } from "react-icons/hi";
 import { useNavigate } from "react-router-dom";
 import { TbMoodEmpty } from "react-icons/tb";
-import { appwriteDeleteDocument, appwriteGetCollection } from "../../lib/appwrite/api";
+import {
+  appwriteDeleteDocument,
+  appwriteGetCollection,
+} from "../../lib/appwrite/api";
 
 const PostList = () => {
   const [posts, setPosts] = useState<TPost[]>([]);
   const navigate = useNavigate();
 
   const getPosts = async () => {
-    const posts = await appwriteGetCollection(appwriteConfig.collectionPostsId) as TPost[];
-    setPosts(posts);
+    const data = (await appwriteGetCollection(
+      appwriteConfig.collectionPostsId
+    )) as TPost[];
+    if (data) setPosts(data);
   };
 
   const deletePost = async (postId: string) => {
-    const res = await appwriteDeleteDocument(postId, appwriteConfig.collectionPostsId);
-    setPosts(posts.filter((post) => post.$id !== postId));
-  }
+    const res = await appwriteDeleteDocument(
+      postId,
+      appwriteConfig.collectionPostsId
+    );
+    if (res) setPosts(posts.filter((post) => post.$id !== postId));
+  };
 
   useEffect(() => {
     getPosts();

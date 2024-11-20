@@ -6,37 +6,39 @@ import { validateEmail, validatePassword } from "../../utils/validation";
 import { useToasterStore } from "../../store/toaster.store";
 
 type Props = {
-  onSubmit: (email: string, password: string) => void;
+  onSubmit: (user: { email: string; password: string }) => void;
 };
 
 const SignIn: React.FC<Props> = ({ onSubmit }) => {
   const { setToast: setToast } = useToasterStore();
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
+  const [user, setUser] = useState({
+    email: "",
+    password: "",
+  });
 
   const validateForm = () => {
-    if ( !email || !password ) {
+    if (!user.email || !user.password) {
       setToast("Поля не могут быть пустыми", "error");
       return;
     }
-    onSubmit(email, password,);
+    onSubmit(user);
   };
   return (
     <div className="grid gap-3 mt-4">
       <Input
-        value={email}
+        value={user.email}
         icon={<MdOutlineEmail size={"25px"} />}
         placeholder="Email"
-        onChange={(e) => setEmail(e.target.value)}
+        onChange={(e) => setUser({ ...user, email: e.target.value })}
         validate={validateEmail}
       />
 
       <Input
-        value={password}
+        value={user.password}
         type="password"
         icon={<PiPassword size={"25px"} />}
         placeholder="Пароль"
-        onChange={(e) => setPassword(e.target.value)}
+        onChange={(e) => setUser({ ...user, password: e.target.value })}
         validate={validatePassword}
       />
 

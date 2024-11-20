@@ -1,31 +1,37 @@
-import Header from "../components/shared/Header";
 import { useState } from "react";
-import { account } from "../lib/appwrite/config";
 import { useNavigate } from "react-router-dom";
 import clsx from "clsx";
 import SignIn from "../components/shared/SignIn";
 import SignUp from "../components/shared/SignUp";
 import { useUserStore } from "../store/user.store";
 import { TNewUser, TUser } from "../types";
-import { appwriteCreateAccount, appwriteGetMe } from "../lib/appwrite/api";
+import { appwriteCreateAccount, appwriteSignIn } from "../lib/appwrite/api";
+import { useToasterStore } from "../store/toaster.store";
 
 const SignInUp = () => {
   const [tabs, setTabs] = useState<number>(1);
   const { setUser } = useUserStore();
+  const { setToast } = useToasterStore();
   const navigate = useNavigate();
 
-  const register = async (user: TNewUser) => {
-    const newUser = (await appwriteCreateAccount(user)) as TUser;
-    if (!newUser) return;
-    setUser(newUser);
-    login(user.email, user.password);
+  const signUp = async (user: TNewUser) => {
+    const newUser = await appwriteCreateAccount(user);
+    if (!newUser) {
+      setToast('Не удалось создать аккаунт', 'error');
+      return;
+    }
+    signIn(user);
+    console.log("newUser", newUser);
   };
-  const login = async (email: string, password: string) => {
-    const session = await account.createEmailPasswordSession(email, password);
-    if (!session) return;
-    const user = (await appwriteGetMe()) as TUser;
-    setUser(user);
-    navigate("/");
+  const signIn = async (user: {email: string, password: string}) => {
+    const currentUser = await appwriteSignIn(user)
+    if(!currentUser) {
+      setToast('Не удалось войти', 'error');
+      return;
+    }
+    setUser(currentUser as TUser);
+    setToast('Вы успешно вошли', 'success');
+    navigate('/');
   };
 
   return (
@@ -45,9 +51,9 @@ const SignInUp = () => {
         </a>
       </div>
       {tabs === 1 ? (
-        <SignIn onSubmit={login} />
+        <SignIn onSubmit={signIn} />
       ) : (
-        <SignUp onSubmit={register} />
+        <SignUp onSubmit={signUp} />
       )}
     </>
   );
