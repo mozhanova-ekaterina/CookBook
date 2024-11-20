@@ -8,36 +8,49 @@ import {
   appwriteCreateDocument,
   appwriteUploadFile,
 } from "../lib/appwrite/api";
-import { TNewPost, TPost } from "../types";
+import { TNewPost } from "../types";
 import { useUserStore } from "../store/user.store";
-import { appwriteConfig } from "../lib/appwrite/config";
+import { appwriteConfig, DB } from "../lib/appwrite/config";
+import { useToasterStore } from "../store/toaster.store";
+import { ID } from "appwrite";
 
 const CreatePost = () => {
+  const navigate = useNavigate();
   const { user } = useUserStore();
-  const [postImg, setPostImg] = useState(import.meta.env.VITE_DEFAULT_POST_IMG);
+  const { setToast } = useToasterStore();
+  const [postImg, setPostImg] = useState<string>(
+    import.meta.env.VITE_DEFAULT_POST_IMG
+  );
+  const [loading, setLoading] = useState<boolean>(false);
   const [post, setPost] = useState<TNewPost>({
     title: "",
     text: "",
     tags: [],
-    imageUrl: postImg,
     creator: user,
   });
-  const [loading, setLoading] = useState<boolean>(false);
-  const navigate = useNavigate();
 
   const uploadFile = async (file: File) => {
     setLoading(true);
     const newFile = (await appwriteUploadFile(file)) as URL;
-    if (newFile instanceof Error) return;
+    if (newFile instanceof Error) {
+      setToast("Не удалось загрузить фото", "error");
+      return;
+    }
     setPostImg(newFile.href);
     setLoading(false);
   };
   const createPost = async () => {
-    const newPost = (await appwriteCreateDocument(
-      post,
-      appwriteConfig.collectionPostsId
-    )) as TPost;
-    if (newPost instanceof Error) return;
+    const newPost = await DB.createDocument(
+      appwriteConfig.databaseId,
+      appwriteConfig.collectionPostsId,
+      ID.unique(),
+      post
+    );
+    if (newPost instanceof Error) {
+      setToast("Не удалось создать пост", "error");
+      return;
+    }
+    setToast("Пост успешно создан", "success");
     navigate(`/full-post/${newPost.$id}`);
   };
 

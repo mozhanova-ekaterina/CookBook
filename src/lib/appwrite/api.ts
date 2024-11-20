@@ -1,4 +1,4 @@
-import { ID } from "appwrite";
+import { ID, Query } from "appwrite";
 import { TNewUser } from "../../types";
 import { account, appwriteConfig, avatars, DB, storage } from "./config";
 
@@ -17,7 +17,7 @@ export async function appwriteCreateAccount(user: TNewUser) {
       accountId: newAccount.$id,
       email: newAccount.email,
       name: newAccount.name,
-      imageUrl: avatarUrl,
+      avatarUrl: avatarUrl,
     });
     return newUser;
   } catch (error) {
@@ -30,7 +30,7 @@ export async function saveUserToDB(user: {
   accountId: string;
   email: string;
   name: string;
-  imageUrl: URL;
+  avatarUrl: URL;
 }) {
   try {
     const newUser = await DB.createDocument(
@@ -46,7 +46,7 @@ export async function saveUserToDB(user: {
   }
 }
 
-export async function appwriteSignIn(user: {
+export async function appwriteCreateSession(user: {
   email: string;
   password: string;
 }) {
@@ -63,10 +63,20 @@ export async function appwriteSignIn(user: {
   }
 }
 
-export async function appwriteGetMe() {
+export async function appwriteGetCurrentUser() {
   try {
-    const user = account.get();
-    return user;
+    const currentAccount = await account.get();
+    if (!currentAccount) throw Error;
+
+    const currentUser = await DB.listDocuments(
+      appwriteConfig.databaseId,
+      appwriteConfig.collectionUsersId,
+      [Query.equal("accountId", currentAccount.$id)]
+    );
+
+    if (!currentUser) throw Error;
+
+    return currentUser.documents[0];
   } catch (error) {
     console.error(error);
     return error;

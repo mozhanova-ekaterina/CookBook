@@ -2,20 +2,27 @@ import { create } from "zustand";
 import { TUser } from "../types";
 
 interface UserState {
-  user: TUser
-  setUser: (user: TUser) => void
-  clearUser: () => void
+  user: TUser;
+  deleteUser: () => void;
+  setUser: (user: TUser) => void;
 }
 
+const INITIAL_USER: TUser = {
+  $id: "",
+  accountId: "",
+  email: "",
+  name: "",
+  posts: [],
+  liked: [],
+  imageUrl: "",
+};
 
-export const useUserStore = create<UserState>(set => ({
-  user: {
-    accountId: "",
-    email: "",
-    name: "",
-    posts: [],
-    liked: []
+export const useUserStore = create<UserState>((set) => ({
+  user: INITIAL_USER,
+  setUser: (user) => {
+    set({ user });
   },
-  setUser: (user) => set({ user }),
-  clearUser: () => set({ user: { accountId: "", email: "", name: "", posts: [], liked: [] } }),
-}))
+  deleteUser: () => {
+    set({ user: INITIAL_USER });
+  },
+}));

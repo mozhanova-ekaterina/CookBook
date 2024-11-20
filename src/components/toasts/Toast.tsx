@@ -12,11 +12,14 @@ type Props = {
 const Toast: React.FC<Props> = ({ text, type }) => {
   return (
     <div
-      className={clsx("p-2 rounded-xl flex border-4 items-center gap-2", {
-        " alert-success": type === "success",
-        " alert-error": type === "error",
-        " alert-info": type === "info",
-      })}
+      className={clsx(
+        "px-2 py-1 rounded-xl flex border-4 items-center gap-1 bg-base-100",
+        {
+          " alert-success": type === "success",
+          " alert-error": type === "error",
+          " alert-info": type === "info",
+        }
+      )}
     >
       {type === "success" && <FaHeartCircleCheck />}
       {type === "error" && <BiSolidMessageRoundedError />}

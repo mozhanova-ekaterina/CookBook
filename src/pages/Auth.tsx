@@ -3,35 +3,43 @@ import { useNavigate } from "react-router-dom";
 import clsx from "clsx";
 import SignIn from "../components/shared/SignIn";
 import SignUp from "../components/shared/SignUp";
-import { useUserStore } from "../store/user.store";
 import { TNewUser, TUser } from "../types";
-import { appwriteCreateAccount, appwriteSignIn } from "../lib/appwrite/api";
 import { useToasterStore } from "../store/toaster.store";
+import { useUserStore } from "../store/user.store";
+import { appwriteCreateAccount, appwriteCreateSession, appwriteGetCurrentUser } from "../lib/appwrite/api";
 
 const SignInUp = () => {
-  const [tabs, setTabs] = useState<number>(1);
-  const { setUser } = useUserStore();
+  const [tabs, setTabs] = useState<1 | 2>(1);
   const { setToast } = useToasterStore();
+  const { setUser } = useUserStore();
   const navigate = useNavigate();
 
   const signUp = async (user: TNewUser) => {
     const newUser = await appwriteCreateAccount(user);
     if (!newUser) {
-      setToast('Не удалось создать аккаунт', 'error');
+      setToast("Не удалось создать аккаунт. Попробуйте снова", "error");
       return;
     }
+
+    setToast("Вы успешно зарегистрировались", "success");
     signIn(user);
-    console.log("newUser", newUser);
   };
-  const signIn = async (user: {email: string, password: string}) => {
-    const currentUser = await appwriteSignIn(user)
-    if(!currentUser) {
-      setToast('Не удалось войти', 'error');
+
+  const signIn = async (user: { email: string; password: string }) => {
+    const session = await appwriteCreateSession(user);
+    if (!session) {
+      setToast("Не удалось авторизоваться. Попробуйте снова", "error");
       return;
     }
-    setUser(currentUser as TUser);
-    setToast('Вы успешно вошли', 'success');
-    navigate('/');
+
+    const currentUser = await appwriteGetCurrentUser() as TUser;
+    if (!currentUser) {
+      setToast("Не удалось войти", "error");
+      return;
+    }
+    setUser(currentUser);
+    setToast("Вы успешно вошли", "success");
+    navigate("/");
   };
 
   return (
@@ -50,11 +58,7 @@ const SignInUp = () => {
           Регистрация
         </a>
       </div>
-      {tabs === 1 ? (
-        <SignIn onSubmit={signIn} />
-      ) : (
-        <SignUp onSubmit={signUp} />
-      )}
+      {tabs === 1 ? <SignIn onSubmit={signIn} /> : <SignUp onSubmit={signUp} />}
     </>
   );
 };

@@ -4,7 +4,7 @@ import Toast from "./Toast";
 const ToastsList = () => {
   const toasters = useToasterStore((state) => state.toasters);
   return (
-    <div className="absolute right-0 bottom-0 p-4 grid gap-2">
+    <div className="fixed z-50 right-0 bottom-0 pb-4 pr-4 grid gap-2">
       {toasters.map((t) => (
         <Toast key={t.id} text={t.message} type={t.type}/>
       ))}

@@ -3,17 +3,17 @@ import "./index.css";
 import Home from "./pages/Home";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Auth from "./pages/Auth";
-import ToastsList from "./components/toasts/ToastsList";
 import CreatePost from "./pages/CreatePost";
 import FullPost from "./pages/FullPost";
 import PageLayout from "./layout/PageLayout";
 import Error from "./pages/Error";
+import { QueryProvider } from "./lib/react-query/QueryProvider";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <PageLayout />,
-    errorElement: <Error/>,
+    errorElement: <Error />,
     children: [
       {
         index: true,
@@ -36,8 +36,7 @@ const router = createBrowserRouter([
 ]);
 
 createRoot(document.getElementById("root")!).render(
-  <>
+  <QueryProvider>
     <RouterProvider router={router} fallbackElement={<Home />} />
-    <ToastsList />
-  </>
+  </QueryProvider>
 );

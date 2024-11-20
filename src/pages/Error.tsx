@@ -7,7 +7,6 @@ const Error = () => {
         Кажется, что-то пошло не так
       </h1>
         <PiSmileyXEyes className="inline" size={"50px"} />
-      <p className="pt-4 italic text-sm">Страница не найдена</p>
     </div>
   );
 }
