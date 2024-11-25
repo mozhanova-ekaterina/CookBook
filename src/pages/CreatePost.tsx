@@ -8,25 +8,23 @@ import {
   appwriteCreateDocument,
   appwriteUploadFile,
 } from "../lib/appwrite/api";
-import { TNewPost } from "../types";
+import { TNewPost, TPost } from "../types";
 import { useUserStore } from "../store/user.store";
-import { appwriteConfig, DB } from "../lib/appwrite/config";
+import { appwriteConfig } from "../lib/appwrite/config";
 import { useToasterStore } from "../store/toaster.store";
-import { ID } from "appwrite";
 
 const CreatePost = () => {
   const navigate = useNavigate();
   const { user } = useUserStore();
   const { setToast } = useToasterStore();
-  const [postImg, setPostImg] = useState<string>(
-    import.meta.env.VITE_DEFAULT_POST_IMG
-  );
   const [loading, setLoading] = useState<boolean>(false);
+  // const [file, setFile] = useState<File>();
   const [post, setPost] = useState<TNewPost>({
     title: "",
     text: "",
     tags: [],
-    creator: user,
+    creator: user.$id,
+    postImg: import.meta.env.VITE_DEFAULT_POST_IMG,
   });
 
   const uploadFile = async (file: File) => {
@@ -36,22 +34,21 @@ const CreatePost = () => {
       setToast("Не удалось загрузить фото", "error");
       return;
     }
-    setPostImg(newFile.href);
+    setPost({ ...post, postImg: newFile.href });
     setLoading(false);
   };
+
   const createPost = async () => {
-    const newPost = await DB.createDocument(
-      appwriteConfig.databaseId,
-      appwriteConfig.collectionPostsId,
-      ID.unique(),
-      post
-    );
+    const newPost = (await appwriteCreateDocument(
+      post,
+      appwriteConfig.collectionPostsId
+    )) as TPost;
     if (newPost instanceof Error) {
       setToast("Не удалось создать пост", "error");
       return;
     }
     setToast("Пост успешно создан", "success");
-    navigate(`/full-post/${newPost.$id}`);
+    navigate('/');
   };
 
   return (
@@ -61,7 +58,7 @@ const CreatePost = () => {
           htmlFor="postImg"
           className="flex gap-2 items-center cursor-pointer"
         >
-          {postImg ? <p>Выбрать другое фото</p> : <p>Загрузить фото</p>}
+          {post.postImg ? <p>Выбрать другое фото</p> : <p>Загрузить фото</p>}
           {loading ? (
             <Loader />
           ) : (
@@ -78,7 +75,7 @@ const CreatePost = () => {
         />
       </div>
       <div>
-        <img className="rounded-lg" src={postImg} alt="" />
+        <img className="rounded-lg" src={post.postImg} alt="" />
       </div>
       <div>
         <Input

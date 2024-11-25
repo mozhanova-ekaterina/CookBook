@@ -7,7 +7,6 @@ import CreatePost from "./pages/CreatePost";
 import FullPost from "./pages/FullPost";
 import PageLayout from "./layout/PageLayout";
 import Error from "./pages/Error";
-import { QueryProvider } from "./lib/react-query/QueryProvider";
 
 const router = createBrowserRouter([
   {
@@ -36,7 +35,5 @@ const router = createBrowserRouter([
 ]);
 
 createRoot(document.getElementById("root")!).render(
-  <QueryProvider>
-    <RouterProvider router={router} fallbackElement={<Home />} />
-  </QueryProvider>
+  <RouterProvider router={router} fallbackElement={<Home />} />
 );

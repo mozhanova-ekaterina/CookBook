@@ -27,13 +27,13 @@ const SignInUp = () => {
 
   const signIn = async (user: { email: string; password: string }) => {
     const session = await appwriteCreateSession(user);
-    if (!session) {
+    if (session instanceof Error) {
       setToast("Не удалось авторизоваться. Попробуйте снова", "error");
       return;
     }
 
     const currentUser = await appwriteGetCurrentUser() as TUser;
-    if (!currentUser) {
+    if (currentUser instanceof Error) {
       setToast("Не удалось войти", "error");
       return;
     }

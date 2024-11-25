@@ -16,20 +16,21 @@ export type TNewUser = {
 };
 
 export type TPost = {
+  $id: string;
   title: string;
   text: string;
   creator: TUser;
-  imageUrl: string;
-  tags?: string[];
-  $id: string;
   createdAt: string;
+  postImg: string;
+  tags?: string[];
   likes?: TUser[];
 };
 
 export type TNewPost = {
   title: string;
   text: string;
+  creator: string;
   tags?: string[];
-  creator: TUser;
+  postImg: string;
 };
 

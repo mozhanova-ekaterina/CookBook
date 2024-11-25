@@ -17,7 +17,7 @@ const FullPost = () => {
     setPost({
       title: res.title,
       text: res.text,
-      imageUrl: res.imageUrl,
+      postImg: res.imageUrl,
       tags: res.tags,
       $id: res.$id,
       createdAt: res.createdAt,
@@ -33,14 +33,15 @@ const FullPost = () => {
       <h1 className="text-xl font-bold border-b-2 pb-2 border-primary">
         {post?.title}
       </h1>
-      {post?.imageUrl && (
+      {post?.postImg && (
         <img
           className="mt-2 rounded-lg"
-          src={post?.imageUrl}
+          src={post?.postImg}
           alt="Картинка не загрузилась("
         />
       )}
       <p className="py-2">{post?.text}</p>
+      <p>{post?.creator.name}</p>
     </>
   );
 };

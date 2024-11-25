@@ -11,8 +11,8 @@ const Home = () => {
 
   const getMe = async () => {
     const user = await appwriteGetCurrentUser() as TUser;
-    if (!user) navigate("/login");
     setUser(user);
+    if (!user.$id) navigate("/login");
   };
 
   useEffect(() => {

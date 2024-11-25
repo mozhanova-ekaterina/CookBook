@@ -75,7 +75,7 @@ export async function appwriteGetCurrentUser() {
     );
 
     if (!currentUser) throw Error;
-
+    
     return currentUser.documents[0];
   } catch (error) {
     console.error(error);

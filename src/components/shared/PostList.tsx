@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { appwriteConfig, DB } from "../../lib/appwrite/config";
+import { appwriteConfig } from "../../lib/appwrite/config";
 import Post from "./Post";
 import { TPost } from "../../types";
 import Button from "../ui/Button";
@@ -23,11 +23,12 @@ const PostList = () => {
   };
 
   const deletePost = async (postId: string) => {
-    const res = await appwriteDeleteDocument(
-      postId,
-      appwriteConfig.collectionPostsId
+    await appwriteDeleteDocument(postId, appwriteConfig.collectionPostsId).then(
+      () => {
+        const filteredPosts = posts.filter((post) => post.$id !== postId);
+        setPosts(filteredPosts);
+      }
     );
-    if (res) setPosts(posts.filter((post) => post.$id !== postId));
   };
 
   useEffect(() => {
@@ -42,7 +43,7 @@ const PostList = () => {
             <Post
               key={i}
               title={post.title}
-              imageUrl={post.imageUrl}
+              postImg={post.postImg}
               creator={post.creator}
               $id={post.$id}
               onClick={() => navigate(`/full-post/${post.$id}`)}
@@ -55,7 +56,7 @@ const PostList = () => {
           Рецептов нет <TbMoodEmpty size={"30px"} />
         </p>
       )}
-      <div className="py-4 z-10 sticky bottom-0 right-0 left-0 text-center text-3xl">
+      <div className="py-4 z-10 absolute bottom-0 right-0 left-0 text-center text-3xl">
         <Button
           className="rounded-full"
           variant="primary"

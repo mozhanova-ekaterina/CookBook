@@ -16,13 +16,12 @@ const Button: React.FC<Props> = ({
   variant,
   className,
   onClick,
-  size = 2,
 }) => {
   return (
     <button
       onClick={onClick}
       className={clsx(
-        `btn btn-${variant} h-[${size}rem]  min-h-[${size}rem] p-${size}`,
+        `btn btn-${variant}`,
         className
       )}
     >

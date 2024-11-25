@@ -12,9 +12,6 @@ const INITIAL_USER: TUser = {
   accountId: "",
   email: "",
   name: "",
-  posts: [],
-  liked: [],
-  imageUrl: "",
 };
 
 export const useUserStore = create<UserState>((set) => ({
