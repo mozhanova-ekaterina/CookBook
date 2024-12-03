@@ -21,7 +21,8 @@ const Home = () => {
 
   return (
     <>
-      <p>Hello, {user.name}</p>
+      <p>Hello, {user.$id}</p>
+      <p>Name {user.name}</p>
       <PostList />
     </>
   );

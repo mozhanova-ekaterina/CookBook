@@ -22,7 +22,7 @@ const Post: React.FC<Props> = ({
   $id,
 }) => {
   const { user } = useUserStore();
-  
+
   return (
     <div className="card bg-base-100 shadow-xl">
       <figure onClick={onClick} className="max-h-[200px]">
@@ -31,7 +31,7 @@ const Post: React.FC<Props> = ({
       <div className="card-body py-3 px-2">
         <h2 className="card-title">{title}</h2>
       </div>
-      {creator.$id === user?.$id && (
+      {creator && creator.$id === user?.$id && (
         <div className="absolute bottom-0 right-0 p-2">
           <Button
             className="rounded-full p-2 h-auto min-h-2"

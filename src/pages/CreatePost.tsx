@@ -1,6 +1,6 @@
 import { PiUploadSimpleLight } from "react-icons/pi";
 import Input from "../components/ui/Input";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Loader from "../components/ui/Loader";
 import Button from "../components/ui/Button";
 import { useNavigate } from "react-router-dom";
@@ -18,37 +18,48 @@ const CreatePost = () => {
   const { user } = useUserStore();
   const { setToast } = useToasterStore();
   const [loading, setLoading] = useState<boolean>(false);
-  // const [file, setFile] = useState<File>();
-  const [post, setPost] = useState<TNewPost>({
-    title: "",
-    text: "",
-    tags: [],
-    creator: user.$id,
-    postImg: import.meta.env.VITE_DEFAULT_POST_IMG,
-  });
+  const [file, setFile] = useState<File>();
+  const [image, setImage] = useState<string>(
+    import.meta.env.VITE_DEFAULT_POST_IMG
+  );
+  const [title, setTitle] = useState<string>("");
+  const [text, setText] = useState<string>("");
+  const [tags, setTags] = useState<string[]>([]);
 
-  const uploadFile = async (file: File) => {
-    setLoading(true);
-    const newFile = (await appwriteUploadFile(file)) as URL;
-    if (newFile instanceof Error) {
-      setToast("Не удалось загрузить фото", "error");
-      return;
+  const onImageChange = (target: HTMLInputElement) => {
+    if (target.files) {
+      const file = target.files[0];
+      setFile(file);
+      setImage(URL.createObjectURL(file));
     }
-    setPost({ ...post, postImg: newFile.href });
-    setLoading(false);
   };
 
+  // const uploadFile = async (file: File) => {
+  //   return appwriteUploadFile(file)
+  //     .then((file) => file.href)
+  //     .catch((error) => {
+  //       setToast("Не удалось загрузить фото", "error");
+  //       throw error;
+  //     });
+  // };
+
   const createPost = async () => {
-    const newPost = (await appwriteCreateDocument(
-      post,
-      appwriteConfig.collectionPostsId
-    )) as TPost;
-    if (newPost instanceof Error) {
-      setToast("Не удалось создать пост", "error");
-      return;
-    }
-    setToast("Пост успешно создан", "success");
-    navigate('/');
+    if (file)
+      appwriteUploadFile(file).then((file) =>
+        appwriteCreateDocument(
+          {
+            title,
+            text,
+            tags,
+            creator: user.$id,
+            postImg: file.href,
+          },
+          appwriteConfig.collectionPostsId
+        )
+      )
+      .then(() => {
+        navigate("/");
+      });
   };
 
   return (
@@ -58,7 +69,7 @@ const CreatePost = () => {
           htmlFor="postImg"
           className="flex gap-2 items-center cursor-pointer"
         >
-          {post.postImg ? <p>Выбрать другое фото</p> : <p>Загрузить фото</p>}
+          <p>Выбрать другое фото</p>
           {loading ? (
             <Loader />
           ) : (
@@ -71,25 +82,25 @@ const CreatePost = () => {
           type="file"
           id="postImg"
           className="hidden"
-          onChange={(e) => e.target.files && uploadFile(e.target.files[0])}
+          onChange={(e) => onImageChange(e.target)}
         />
       </div>
       <div>
-        <img className="rounded-lg" src={post.postImg} alt="" />
+        <img className="rounded-lg" src={image} alt="" />
       </div>
       <div>
         <Input
           type="text"
-          value={post.title}
-          onChange={(e) => setPost({ ...post, title: e.target.value })}
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
           placeholder="Что готовим?"
         />
       </div>
       <div className="grow flex">
         <textarea
           className="textarea textarea-primary w-full font-bold p-2 caret-primary"
-          value={post.text}
-          onChange={(e) => setPost({ ...post, text: e.target.value })}
+          value={text}
+          onChange={(e) => setText(e.target.value)}
           placeholder="Рецептик сюда..."
           rows={15}
         />
@@ -102,3 +113,11 @@ const CreatePost = () => {
 };
 
 export default CreatePost;
+
+//!!!:
+//В TypeScript постфикс ! удаляет null и undefined из типа выражения.
+//Это полезно, когда вы знаете, что переменная, которая «могла бы» быть
+//null или undefined, на самом деле не является ими.
+
+//TODO:
+//дописать функцию createPost, на случай если файл не выбран

@@ -75,7 +75,7 @@ export async function appwriteGetCurrentUser() {
     );
 
     if (!currentUser) throw Error;
-    
+
     return currentUser.documents[0];
   } catch (error) {
     console.error(error);
@@ -97,13 +97,31 @@ export async function appwriteUploadFile(file: File) {
   try {
     const newFile = await storage
       .createFile(appwriteConfig.storageId, ID.unique(), file)
-      .then((res) => {
-        return storage.getFilePreview(appwriteConfig.storageId, res.$id);
-      });
+      .then((file) => appwriteGetPreview(file.$id));
+
     return newFile;
   } catch (error) {
     console.error(error);
-    return error;
+    throw error;
+  }
+}
+
+export async function appwriteGetPreview(fileId: string) {
+  try {
+    return storage.getFilePreview(appwriteConfig.storageId, fileId, 200, 200);
+  } catch (error) {
+    console.error(error);
+    await appwriteDeleteFile(fileId);
+    throw error;
+  }
+}
+
+export async function appwriteDeleteFile(fileId: string) {
+  try {
+    await storage.deleteFile(appwriteConfig.storageId, fileId);
+  } catch (error) {
+    console.error(error);
+    throw error;
   }
 }
 

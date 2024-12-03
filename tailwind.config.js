@@ -11,7 +11,7 @@ export default {
     themes: [
       {
         light: {
-          primary: "#ff006e",
+          primary: "#f73859",
           "primary-content": "#ffffff",
           secondary: "green",
           accent: "green",
