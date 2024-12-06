@@ -60,6 +60,7 @@ const CreatePost = () => {
       .then(() => {
         navigate("/");
       });
+      ``
   };
 
   return (

@@ -108,7 +108,7 @@ export async function appwriteUploadFile(file: File) {
 
 export async function appwriteGetPreview(fileId: string) {
   try {
-    return storage.getFilePreview(appwriteConfig.storageId, fileId, 200, 200);
+    return storage.getFilePreview(appwriteConfig.storageId, fileId, 300, 200);
   } catch (error) {
     console.error(error);
     await appwriteDeleteFile(fileId);
@@ -172,4 +172,4 @@ export async function appwriteDeleteDocument(
     console.error(error);
     return error;
   }
-}
+} 
